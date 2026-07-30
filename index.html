@@ -7,96 +7,102 @@
     <style>
         * {box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif;}
         body {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 25px;
             background-color: #f8f9fa;
             color: #2c3e50;
         }
-        .btn-volver {
-            display: block;
-            margin: 0 auto 25px;
-            padding: 10px 25px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            cursor: pointer;
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #2c3e50;
         }
-        h1 {text-align: center; font-size: 2.8em; margin-bottom: 10px; font-weight: bold;}
-        .subtitulo {text-align: center; color: #666; margin-bottom: 25px; font-size: 1.3em;}
+        .meta {
+            text-align: center;
+            color: #666;
+            font-size: 1.4em;
+            margin-bottom: 30px;
+        }
+        .instruccion {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        /* BOTÓN IGUAL A TU EJEMPLO: ROJO, GRANDE, CLARO */
         .btn-audio {
             display: block;
             width: 100%;
-            max-width: 700px;
-            margin: 0 auto 25px;
-            padding: 15px;
-            background: #dc3545;
+            padding: 18px;
+            background-color: #dc2626;
             color: white;
             border: none;
             border-radius: 8px;
-            font-size: 1.4em;
+            font-size: 1.6em;
             font-weight: bold;
             cursor: pointer;
+            margin-bottom: 30px;
             transition: background 0.2s;
         }
-        .btn-audio:hover {background: #c82333;}
+        .btn-audio:hover {background-color: #b91c1c;}
         .imagen-actividad {
             max-width: 100%;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            margin: 0 auto 35px;
             display: block;
-            margin: 0 auto 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .preguntas {
             background: white;
-            padding: 25px;
-            border-radius: 10px;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
         }
-        .preguntas h3 {margin-bottom: 15px; font-size: 1.5em;}
-        .preguntas ol {padding-left: 28px; line-height: 1.9; font-size: 1.2em;}
+        .preguntas h3 {font-size: 1.7em; margin-bottom: 20px;}
+        .preguntas ol {font-size: 1.3em; line-height: 2; padding-left: 30px;}
         .respuesta {
             width: 100%;
-            height: 160px;
+            height: 180px;
             border: 1px solid #ccc;
             border-radius: 8px;
-            padding: 15px;
-            font-size: 1.1em;
+            padding: 18px;
+            font-size: 1.2em;
+            margin-bottom: 30px;
             resize: vertical;
-            margin-bottom: 25px;
         }
         .ejemplo {
-            background-color: #e8f4fd;
-            padding: 20px;
+            background: #e8f4fd;
+            padding: 25px;
             border-radius: 8px;
             font-style: italic;
-            line-height: 1.6;
+            line-height: 1.7;
+            font-size: 1.1em;
         }
-        audio {display: none;} /* Ocultamos el reproductor nativo */
+        audio {display: none;} /* Reproductor oculto, solo botón */
     </style>
 </head>
 <body>
 
-    <!-- Botón Volver al menú -->
-    <button class="btn-volver" onclick="history.back()">⬅️ Volver al menú</button>
+    <h1>🔢 Actividad: Observa y describe</h1>
+    <p class="meta">Área: Matemáticas | Fecha: 30 de julio de 2026</p>
 
-    <h1>🔢 ACTIVIDAD: OBSERVA Y DESCRIBE</h1>
-    <p class="subtitulo">Área: Matemáticas | Fecha: 30 de julio de 2026</p>
+    <div class="instruccion">
+        📌 Instrucción: Mira la imagen con atención, escucha la indicación y explica con tus palabras qué observas y qué están haciendo.
+    </div>
 
-    <!-- Botón para activar sonido IGUAL A TU EJEMPLO -->
+    <!-- BOTÓN DE SONIDO IGUAL A TU EJEMPLO -->
     <button class="btn-audio" id="botonSonido">🔊 Toca aquí para escuchar toda la actividad</button>
 
-    <!-- Imagen con nombre EXACTO -->
-    <img src="MATEMATICAS.jpeg?v=1" alt="Niños trabajando en actividades de matemáticas" class="imagen-actividad">
+    <!-- IMAGEN CON NOMBRE EXACTO -->
+    <img src="MATEMATICAS.jpeg?v=2" alt="Niños trabajando en actividades de matemáticas" class="imagen-actividad">
 
-    <!-- Audio oculto, se reproduce al pulsar el botón -->
+    <!-- ARCHIVO DE AUDIO -->
     <audio id="audioActividad" preload="auto">
         <source src="toda_la_actividad.mp3" type="audio/mpeg">
-        Tu navegador no soporta audio.
+        Tu navegador no soporta audio. Descarga el archivo para escucharlo.
     
 
     <div class="preguntas">
@@ -119,7 +125,7 @@
     </div>
 
     <script>
-        // Función para reproducir/pausar el audio al hacer clic
+        // AL PULSAR EL BOTÓN SE REPRODUCE/DETIENE EL AUDIO
         const boton = document.getElementById('botonSonido');
         const audio = document.getElementById('audioActividad');
         boton.addEventListener('click', () => {
