@@ -18,8 +18,8 @@
         .meta {text-align: center; color: #666; margin-bottom: 20px; font-size: 1.1em;}
         .instruccion {font-size: 1.2em; font-weight: bold; margin-bottom: 20px; line-height: 1.5; text-align:center;}
         .imagen-actividad {max-width:100%; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:20px; display:block; margin:0 auto;}
-        .reproductor {text-align:center; margin-bottom:25px;}
-        audio {width: 100%; max-width: 500px;}
+        .reproductor {text-align:center; margin-bottom:25px; padding:15px; background:#fff; border-radius:8px;}
+        audio {width: 100%; max-width: 550px; margin-top:10px;}
         .preguntas {background:white; padding:25px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.05); margin-bottom:25px;}
         .preguntas h3 {margin-bottom:15px; font-size:1.4em;}
         .preguntas ol {padding-left:25px; line-height:1.8; font-size:1.1em;}
@@ -36,15 +36,13 @@
         📌 Instrucción: Mira la imagen con atención, escucha la indicación y explica con tus palabras qué observas y qué están haciendo.
     </div>
 
-    <!-- NOMBRE EXACTO DE TU IMAGEN: respeta MAYÚSCULAS y .jpeg -->
     <img src="MATEMATICAS.jpeg?v=1" alt="Niños trabajando en actividades de matemáticas" class="imagen-actividad">
 
-    <!-- Espacio para tu audio: súbelo con el nombre indicado -->
     <div class="reproductor">
-        <p>🔊 Escucha la indicación:</p>
-        <audio controls>
-            <source src="indicacion_matematicas.mp3" type="audio/mpeg">
-            Tu navegador no puede reproducir el audio.
+        <p>🔊 Escucha toda la actividad:</p>
+        <audio controls preload="auto">
+            <source src="toda_la_actividad.mp3" type="audio/mpeg">
+            Tu navegador no soporta audio. <a href="toda_la_actividad.mp3">Descargar indicación completa</a>
         
     </div>
 
