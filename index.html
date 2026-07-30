@@ -6,100 +6,153 @@
     <title>Actividad: Observa y describe</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { max-width: 1100px; margin: 30px auto; padding: 0 20px; background: #f8f9fa; text-align: center; }
-        h1 { font-size: 2.8em; margin-bottom: 15px; color: #2c3e50; }
-        .meta { font-size: 1.3em; color: #666; margin-bottom: 25px; }
-        .instruccion { font-size: 1.5em; font-weight: bold; margin-bottom: 30px; line-height: 1.6; }
-        /* BOTÓN ROJO IGUAL A TU EJEMPLO */
+        body { 
+            max-width: 1000px; 
+            margin: 20px auto; 
+            padding: 15px; 
+            background: #ffffff; 
+            text-align: center;
+        }
+        h1 { 
+            font-size: 2.2em; 
+            margin-bottom: 10px; 
+            color: #1f2937; 
+            font-weight: bold;
+        }
+        .meta { 
+            font-size: 1.2em; 
+            color: #4b5563; 
+            margin-bottom: 20px; 
+        }
+        .instruccion { 
+            font-size: 1.4em; 
+            font-weight: bold; 
+            margin-bottom: 25px; 
+            line-height: 1.5;
+            color: #111827;
+        }
+        /* BOTÓN ROJO GRANDE, FÁCIL DE TOCAR */
         #activarSonido {
-            background: #dc2626; color: white; border: none;
-            padding: 18px; border-radius: 8px; width: 100%;
-            font-size: 1.6em; font-weight: bold; cursor: pointer;
-            margin-bottom: 30px; transition: background 0.2s;
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: background 0.2s;
         }
         #activarSonido:hover { background: #b91c1c; }
         #btnLeer {
-            background: #f59e0b; color: white; border: none;
-            padding: 12px; border-radius: 8px; font-size: 1.3em;
-            margin-bottom: 30px; display: none; cursor: pointer;
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 25px;
+            display: none;
+            cursor: pointer;
         }
         .imagen-actividad {
-            max-width: 100%; border-radius: 8px;
-            margin: 0 auto 35px; display: block;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 0 auto 30px;
+            display: block;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
         .preguntas {
-            background: white; padding: 30px; border-radius: 12px;
-            margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            text-align: left; font-size: 1.3em; line-height: 2;
+            background: #f9fafb;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: left;
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #1f2937;
         }
-        .preguntas h3 { margin-bottom: 20px; font-size: 1.7em; }
+        .preguntas h3 { margin-bottom: 15px; font-size: 1.5em; }
         .respuesta {
-            width: 100%; height: 180px; border: 1px solid #ccc;
-            border-radius: 8px; padding: 18px; font-size: 1.2em;
-            margin-bottom: 30px; resize: vertical;
+            width: 100%;
+            height: 150px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            resize: vertical;
         }
         .ejemplo {
-            background: #e8f4fd; padding: 25px; border-radius: 8px;
-            font-style: italic; line-height: 1.7; font-size: 1.1em;
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            font-style: italic;
+            line-height: 1.6;
+            font-size: 1.1em;
             text-align: left;
+            color: #1e40af;
         }
     </style>
 </head>
 <body>
 
-    <h1>🔢 Actividad: Observa y describe</h1>
-    <p class="meta">Área: Matemáticas | Fecha: 30 de julio de 2026</p>
+    <h1>🔢 Observa y cuenta</h1>
+    <p class="meta">Matemáticas</p>
 
     <div class="instruccion">
-        📌 Instrucción: Mira la imagen con atención, escucha la indicación y explica con tus palabras qué observas y qué están haciendo.
+        📌 Toca el botón para escuchar la indicación. Mira la imagen y di qué ves.
     </div>
 
-    <!-- BOTÓN DE SONIDO IGUAL A TU EJEMPLO -->
-    <button id="activarSonido" onclick="activarVoz()">🔊 Toca aquí para activar el sonido</button>
-    <button id="btnLeer" onclick="leerTodo()">🔊 Escuchar toda la actividad</button>
+    <!-- BOTÓN PRINCIPAL -->
+    <button id="activarSonido" onclick="activarVoz()">🔊 Toca aquí para escuchar</button>
+    <button id="btnLeer" onclick="leerTodo()">🔊 Escuchar todo</button>
 
     <!-- IMAGEN CON NOMBRE EXACTO -->
-    <img src="MATEMATICAS.jpeg?v=2" alt="Niños trabajando en actividades de matemáticas" class="imagen-actividad">
+    <img src="MATEMATICAS.jpeg?v=3" alt="Niños y materiales de matemáticas" class="imagen-actividad">
 
     <div class="preguntas">
-        <h3>🤔 Preguntas guía:</h3>
+        <h3>🤔 Preguntas fáciles:</h3>
         <ol>
-            <li>¿Quiénes aparecen en la imagen y qué materiales utilizan?</li>
-            <li>¿Qué números, formas o cuentas puedes ver?</li>
-            <li>¿Qué crees que están calculando o aprendiendo?</li>
-            <li>¿Cómo están trabajando: solos, en equipo o con ayuda?</li>
-            <li>Escribe 3 oraciones completas describiendo la escena.</li>
+            <li>¿Quiénes ves en la imagen?</li>
+            <li>¿Qué objetos o números hay?</li>
+            <li>¿Qué están haciendo?</li>
+            <li>¿Qué puedes contar?</li>
+            <li>Cuenta con tus palabras lo que ves.</li>
         </ol>
     </div>
 
-    <h3>✏️ Tu descripción:</h3>
-    <textarea class="respuesta" placeholder="Escribe aquí lo que observas..."></textarea>
+    <h3>✏️ Di lo que ves:</h3>
+    <textarea class="respuesta" placeholder="Escribe o dibuja aquí..."></textarea>
 
     <div class="ejemplo">
-        <strong>📖 Ejemplo de respuesta:</strong><br>
-        En la imagen hay niños y una maestra realizando actividades de matemáticas. Usan números, figuras y materiales para contar y resolver ejercicios. Están atentos y colaboran para aprender juntos.
+        <strong>💡 Ejemplo:</strong><br>
+        Veo niños y una maestra. Hay números y figuras. Están contando y aprendiendo juntos.
     </div>
 
     <script>
         let vozLista = false;
-        // TEXTO QUE SE ESCUCHARÁ COMPLETO
-        const textoCompleto = `Actividad: Observa y describe. Área: Matemáticas. Fecha: 30 de julio de 2026.
-        Instrucción: Mira la imagen con atención, escucha la indicación y explica con tus palabras qué observas y qué están haciendo.
-        Preguntas guía:
-        Uno: ¿Quiénes aparecen en la imagen y qué materiales utilizan?
-        Dos: ¿Qué números, formas o cuentas puedes ver?
-        Tres: ¿Qué crees que están calculando o aprendiendo?
-        Cuatro: ¿Cómo están trabajando: solos, en equipo o con ayuda?
-        Cinco: Escribe tres oraciones completas describiendo la escena.
-        Ejemplo de respuesta: En la imagen hay niños y una maestra realizando actividades de matemáticas. Usan números, figuras y materiales para contar y resolver ejercicios. Están atentos y colaboran para aprender juntos.`;
+        // TEXTO CLARO Y LENTO PARA QUIENES AÚN NO LEEN
+        const textoCompleto = `Actividad: Observa y cuenta. Área de Matemáticas.
+        Instrucción: Mira la imagen con cuidado. Escucha bien y di con tus palabras qué ves y qué hacen.
+        Preguntas:
+        Una: ¿Quiénes aparecen?
+        Dos: ¿Qué cosas o números hay?
+        Tres: ¿Qué están haciendo?
+        Cuatro: ¿Qué puedes contar?
+        Cinco: Cuenta lo que ves con tus palabras.
+        Ejemplo: Veo niños y una maestra. Hay números y figuras. Están contando y aprendiendo juntos.`;
 
-        // FUNCIÓN DE VOZ (igual que tu ejemplo)
+        // VOZ LENTA Y CLARA
         function hablar(texto) {
             window.speechSynthesis.cancel();
             const voz = new SpeechSynthesisUtterance(texto);
             voz.lang = "es-ES";
-            voz.rate = 0.9;
+            voz.rate = 0.8; // Más lento para entender mejor
+            voz.volume = 1;
             window.speechSynthesis.speak(voz);
         }
 
@@ -107,7 +160,7 @@
             vozLista = true;
             document.getElementById('activarSonido').style.display = 'none';
             document.getElementById('btnLeer').style.display = 'inline-block';
-            hablar("Sonido activado. Toca el botón de abajo para escuchar toda la actividad.");
+            hablar("¡Hola! El sonido ya está activado. Toca el botón de abajo para escuchar toda la actividad.");
         }
 
         function leerTodo() {
