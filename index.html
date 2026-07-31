@@ -16,11 +16,12 @@
         #btnGrabar { background: #ef4444; color: white; border: none; padding: 18px; border-radius: 10px; width: 100%; font-size: 1.6em; font-weight: bold; cursor: pointer; margin-bottom: 12px; }
         #btnLeer { background: #16a34a; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 1.5em; font-weight: bold; margin-bottom: 25px; display: none; cursor: pointer; }
         #btnDetener, #btnGuardar { background: #6b7280; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1.3em; margin: 8px; cursor: pointer; display: none; }
-        #btnGuardar { background: #2563eb; }
+        #btnGuardar { background: #2563eb; text-decoration: none; display: inline-block; }
 
         /* VISTA DE CÁMARA Y VIDEO */
         #vistaCamara, #videoGrabado { max-width: 100%; border-radius: 10px; margin: 15px auto; display: none; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
-        .grabando { color: #ef4444; font-weight: bold; font-size: 1.2em; margin: 10px 0; display: none; }
+        .grabando { color: #ef4444; font-weight: bold; font-size: 1.3em; margin: 10px 0; display: none; animation: parpadeo 1s infinite; }
+        @keyframes parpadeo { 50% {opacity:0.5;} }
 
         .imagen-actividad { max-width: 100%; border-radius: 10px; margin: 0 auto 25px; display: block; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
         .preguntas { background: #f0f7ff; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: left; font-size: 1.3em; line-height: 1.9; }
@@ -33,7 +34,7 @@
     <p class="meta">Lengua y Literatura | Para niños de 5 años</p>
 
     <div class="instruccion">
-        📌 Toca el botón rojo para escuchar, o el botón de grabar para contar lo que ves en video.
+        📌 Toca el botón rojo para escuchar, o "Encender y grabar" para contar lo que ves.
     </div>
 
     <!-- BOTONES PRINCIPALES -->
@@ -48,7 +49,7 @@
     <a id="btnGuardar" download="mi_explicacion.mp4">💾 Guardar mi video</a>
 
     <!-- IMAGEN DE LA ACTIVIDAD -->
-    <img src="LECTURA.jpeg?v=1" alt="Niños y libros leyendo juntos" class="imagen-actividad">
+    <img src="LECTURA.jpeg?v=2" alt="Niños y libros leyendo juntos" class="imagen-actividad">
 
     <div class="preguntas">
         <h3>🤔 Cuenta con tus palabras:</h3>
@@ -67,8 +68,7 @@
         let datosVideo = [];
 
         const textoCompleto = `Actividad de Lengua y Literatura: Mira y cuenta. Para niños de cinco años.
-        Instrucción: Mira la imagen, escucha bien y cuando quieras, presiona el botón para grabar tu explicación.
-        Preguntas: ¿Quiénes salen? ¿Qué hacen? ¿Qué te gusta? Cuenta todo lo que veas.`;
+        Instrucción: Mira la imagen, escucha bien y cuando quieras, presiona el botón para grabar tu explicación.`;
 
         // --- FUNCIÓN DE VOZ ---
         function hablar(texto) {
@@ -81,30 +81,34 @@
             vozLista = true;
             document.getElementById('activarSonido').style.display = 'none';
             document.getElementById('btnLeer').style.display = 'inline-block';
-            hablar("¡Hola! Ya se escucha. Toca el botón rojo de abajo para grabar lo que quieras contar.");
+            hablar("¡Hola! Ya se escucha. Toca el botón rojo de abajo para grabar.");
         }
         function leerTodo() { if (vozLista) hablar(textoCompleto); }
 
-        // --- FUNCIÓN DE GRABACIÓN ---
+        // --- FUNCIÓN DE GRABACIÓN CORREGIDA ---
         async function iniciarGrabacion() {
             try {
-                // Pedir permiso y encender cámara + micrófono
+                // Pedir cámara Y micrófono obligatoriamente
                 flujo = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "user", width: 640, height: 480 },
+                    video: { facingMode: "user", width: {ideal:640}, height: {ideal:480} },
                     audio: true
                 });
 
-                // Mostrar cámara en vivo
+                // Mostrar cámara
                 const camara = document.getElementById('vistaCamara');
                 camara.srcObject = flujo;
                 camara.style.display = 'block';
 
-                // Empezar a grabar
+                // Preparar grabador con formato que SÍ funciona en todos lados
                 datosVideo = [];
-                grabador = new MediaRecorder(flujo);
-                grabador.ondataavailable = e => datosVideo.push(e.data);
-                grabador.onstop = guardarVideo;
-                grabador.start();
+                const tiposValidos = ['video/webm;codecs=vp9,opus', 'video/webm', 'video/mp4'];
+                let formato = tiposValidos.find(tipo => MediaRecorder.isTypeSupported(tipo)) || '';
+                
+                grabador = new MediaRecorder(flujo, { mimeType: formato });
+                grabador.ondataavailable = e => { if(e.data.size>0) datosVideo.push(e.data); };
+                grabador.onstop = mostrarVideoGuardado;
+
+                grabador.start(100); // Envía datos poco a poco para no fallar
 
                 // Cambiar botones
                 document.getElementById('btnGrabar').style.display = 'none';
@@ -113,8 +117,9 @@
                 hablar("¡Listo! Ya te estás grabando. Cuenta lo que ves y presiona terminar cuando acabes.");
 
             } catch (err) {
-                alert("Pide permiso a la cámara y micrófono para grabar.");
-                hablar("No se pudo activar. Pide ayuda a un adulto para dar permiso.");
+                console.error(err);
+                alert("❌ No dio permiso a CÁMARA o MICRÓFONO. Revisa los permisos del navegador.");
+                hablar("No se pudo grabar. Pide ayuda para dar permiso a cámara y micrófono.");
             }
         }
 
@@ -125,11 +130,11 @@
             document.getElementById('vistaCamara').style.display = 'none';
             document.getElementById('textoGrabando').style.display = 'none';
             document.getElementById('btnDetener').style.display = 'none';
-            hablar("Grabación terminada. Ya puedes verla y guardarla.");
+            hablar("Grabación terminada. Mira abajo y guarda tu video.");
         }
 
-        function guardarVideo() {
-            const blob = new Blob(datosVideo, { type: 'video/mp4' });
+        function mostrarVideoGuardado() {
+            const blob = new Blob(datosVideo, { type: grabador.mimeType });
             const url = URL.createObjectURL(blob);
             const reproductor = document.getElementById('videoGrabado');
             const enlace = document.getElementById('btnGuardar');
