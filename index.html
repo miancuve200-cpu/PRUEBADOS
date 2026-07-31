@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 Mira, cuenta y usa la cámara</title>
+    <title>📚 Mira, cuenta y graba</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body { max-width: 950px; margin: 20px auto; padding: 15px; background: #fff; text-align: center; }
@@ -12,59 +12,65 @@
         .instruccion { font-size: 1.4em; font-weight: bold; margin-bottom: 25px; line-height: 1.5; }
         
         /* BOTONES GRANDES Y FÁCILES */
-        #activarSonido { background: #dc2626; color: white; border: none; padding: 18px; border-radius: 10px; width: 100%; font-size: 1.6em; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
-        #activarCamara { background: #8b5cf6; color: white; border: none; padding: 18px; border-radius: 10px; width: 100%; font-size: 1.6em; font-weight: bold; cursor: pointer; margin-bottom: 25px; }
-        #activarSonido:hover, #activarCamara:hover { opacity: 0.9; }
+        #activarSonido { background: #dc2626; color: white; border: none; padding: 18px; border-radius: 10px; width: 100%; font-size: 1.6em; font-weight: bold; cursor: pointer; margin-bottom: 12px; }
+        #btnGrabar { background: #ef4444; color: white; border: none; padding: 18px; border-radius: 10px; width: 100%; font-size: 1.6em; font-weight: bold; cursor: pointer; margin-bottom: 12px; }
         #btnLeer { background: #16a34a; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 1.5em; font-weight: bold; margin-bottom: 25px; display: none; cursor: pointer; }
-        
-        /* VISTA DE CÁMARA */
-        #vistaCamara { display: none; max-width: 100%; border-radius: 10px; margin: 0 auto 25px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
-        #detenerCamara { background: #ef4444; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.3em; margin-top: 10px; cursor: pointer; display: none; }
-        
-        .imagen-actividad { max-width: 100%; border-radius: 10px; margin: 0 auto 30px; display: block; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        #btnDetener, #btnGuardar { background: #6b7280; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1.3em; margin: 8px; cursor: pointer; display: none; }
+        #btnGuardar { background: #2563eb; }
+
+        /* VISTA DE CÁMARA Y VIDEO */
+        #vistaCamara, #videoGrabado { max-width: 100%; border-radius: 10px; margin: 15px auto; display: none; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .grabando { color: #ef4444; font-weight: bold; font-size: 1.2em; margin: 10px 0; display: none; }
+
+        .imagen-actividad { max-width: 100%; border-radius: 10px; margin: 0 auto 25px; display: block; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
         .preguntas { background: #f0f7ff; padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: left; font-size: 1.3em; line-height: 1.9; }
         .preguntas h3 { margin-bottom: 15px; font-size: 1.6em; }
     </style>
 </head>
 <body>
 
-    <h1>📚 Mira, cuenta y usa la cámara</h1>
+    <h1>📚 Mira, cuenta y graba</h1>
     <p class="meta">Lengua y Literatura | Para niños de 5 años</p>
 
     <div class="instruccion">
-        📌 Toca el botón rojo para escuchar, o el morado para ver tu cámara.
+        📌 Toca el botón rojo para escuchar, o el botón de grabar para contar lo que ves en video.
     </div>
 
-    <!-- BOTONES -->
+    <!-- BOTONES PRINCIPALES -->
     <button id="activarSonido" onclick="activarVoz()">🔊 Toca aquí para escuchar</button>
-    <button id="activarCamara" onclick="encenderCamara()">📷 Activar mi cámara</button>
+    <button id="btnGrabar" onclick="iniciarGrabacion()">🎤 Encender y grabar</button>
     <button id="btnLeer" onclick="leerTodo()">🔊 Escuchar todo</button>
 
-    <!-- VISTA DE CÁMARA -->
-    <video id="vistaCamara" autoplay playsinline></video>
-    <button id="detenerCamara" onclick="apagarCamara()">❌ Apagar cámara</button>
+    <div class="grabando" id="textoGrabando">🔴 GRABANDO... ¡Di lo que ves!</div>
+    <video id="vistaCamara" autoplay playsinline muted></video>
+    <button id="btnDetener" onclick="detenerGrabacion()">⏹️ Terminar grabación</button>
+    <video id="videoGrabado" controls></video>
+    <a id="btnGuardar" download="mi_explicacion.mp4">💾 Guardar mi video</a>
 
     <!-- IMAGEN DE LA ACTIVIDAD -->
     <img src="LECTURA.jpeg?v=1" alt="Niños y libros leyendo juntos" class="imagen-actividad">
 
     <div class="preguntas">
-        <h3>🤔 Preguntas fáciles:</h3>
+        <h3>🤔 Cuenta con tus palabras:</h3>
         <ol>
             <li>¿Quiénes salen en la imagen?</li>
             <li>¿Qué están haciendo?</li>
-            <li>¿Qué ves en tu cámara ahora?</li>
-            <li>¿Crees que les gusta leer?</li>
-            <li>Cuenta lo que ves.</li>
+            <li>¿Qué te gusta más de la imagen?</li>
+            <li>Cuenta lo que ves con tus palabras.</li>
         </ol>
     </div>
 
     <script>
         let vozLista = false;
-        let flujoCamara = null;
-        const textoCompleto = `Actividad de Lengua y Literatura: Mira y cuéntame. Para niños de cinco años.
-        Instrucción: Escucha bien, mira la imagen y usa tu cámara si quieres. Di con tus palabras qué ves.`;
+        let flujo = null;
+        let grabador = null;
+        let datosVideo = [];
 
-        // FUNCIÓN DE VOZ
+        const textoCompleto = `Actividad de Lengua y Literatura: Mira y cuenta. Para niños de cinco años.
+        Instrucción: Mira la imagen, escucha bien y cuando quieras, presiona el botón para grabar tu explicación.
+        Preguntas: ¿Quiénes salen? ¿Qué hacen? ¿Qué te gusta? Cuenta todo lo que veas.`;
+
+        // --- FUNCIÓN DE VOZ ---
         function hablar(texto) {
             window.speechSynthesis.cancel();
             const voz = new SpeechSynthesisUtterance(texto);
@@ -75,29 +81,63 @@
             vozLista = true;
             document.getElementById('activarSonido').style.display = 'none';
             document.getElementById('btnLeer').style.display = 'inline-block';
-            hablar("¡Hola! Ya se escucha. Toca el botón morado para ver tu cámara.");
+            hablar("¡Hola! Ya se escucha. Toca el botón rojo de abajo para grabar lo que quieras contar.");
         }
         function leerTodo() { if (vozLista) hablar(textoCompleto); }
 
-        // FUNCIÓN DE CÁMARA
-        async function encenderCamara() {
+        // --- FUNCIÓN DE GRABACIÓN ---
+        async function iniciarGrabacion() {
             try {
-                flujoCamara = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-                const video = document.getElementById('vistaCamara');
-                video.srcObject = flujoCamara;
-                video.style.display = 'block';
-                document.getElementById('detenerCamara').style.display = 'inline-block';
-                hablar("¡Listo! Ya se ve tu cámara.");
-            } catch {
-                alert("No se pudo activar la cámara. Revisa los permisos.");
-                hablar("No se pudo activar la cámara. Pide ayuda a un adulto.");
+                // Pedir permiso y encender cámara + micrófono
+                flujo = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user", width: 640, height: 480 },
+                    audio: true
+                });
+
+                // Mostrar cámara en vivo
+                const camara = document.getElementById('vistaCamara');
+                camara.srcObject = flujo;
+                camara.style.display = 'block';
+
+                // Empezar a grabar
+                datosVideo = [];
+                grabador = new MediaRecorder(flujo);
+                grabador.ondataavailable = e => datosVideo.push(e.data);
+                grabador.onstop = guardarVideo;
+                grabador.start();
+
+                // Cambiar botones
+                document.getElementById('btnGrabar').style.display = 'none';
+                document.getElementById('btnDetener').style.display = 'inline-block';
+                document.getElementById('textoGrabando').style.display = 'block';
+                hablar("¡Listo! Ya te estás grabando. Cuenta lo que ves y presiona terminar cuando acabes.");
+
+            } catch (err) {
+                alert("Pide permiso a la cámara y micrófono para grabar.");
+                hablar("No se pudo activar. Pide ayuda a un adulto para dar permiso.");
             }
         }
-        function apagarCamara() {
-            if (flujoCamara) flujoCamara.getTracks().forEach(t => t.stop());
+
+        function detenerGrabacion() {
+            if (grabador && grabador.state !== 'inactive') grabador.stop();
+            if (flujo) flujo.getTracks().forEach(t => t.stop());
+
             document.getElementById('vistaCamara').style.display = 'none';
-            document.getElementById('detenerCamara').style.display = 'none';
-            hablar("Cámara apagada.");
+            document.getElementById('textoGrabando').style.display = 'none';
+            document.getElementById('btnDetener').style.display = 'none';
+            hablar("Grabación terminada. Ya puedes verla y guardarla.");
+        }
+
+        function guardarVideo() {
+            const blob = new Blob(datosVideo, { type: 'video/mp4' });
+            const url = URL.createObjectURL(blob);
+            const reproductor = document.getElementById('videoGrabado');
+            const enlace = document.getElementById('btnGuardar');
+
+            reproductor.src = url;
+            reproductor.style.display = 'block';
+            enlace.href = url;
+            enlace.style.display = 'inline-block';
         }
     </script>
 
