@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activar Cámara</title>
+    <title>Grabar Video</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body {
@@ -22,54 +22,85 @@
             border-radius: 10px;
             color: white;
             cursor: pointer;
-            margin: 10px;
+            margin: 8px;
         }
-        #btnEncender { background: #16a34a; }
-        #btnApagar { background: #ef4444; display: none; }
-        #vistaCamara {
+        #btnGrabar { background: #ef4444; }
+        #btnDetener { background: #6b7280; display: none; }
+        #btnGuardar { background: #2563eb; display: none; text-decoration: none; }
+        #vistaCamara, #videoGrabado {
             max-width: 100%;
             border-radius: 10px;
-            margin: 25px auto;
+            margin: 20px auto;
             display: none;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .grabando {
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin: 10px 0;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <h1>📷 Cámara</h1>
+    <h1>🎥 Grabar Video</h1>
 
-    <button id="btnEncender" onclick="encenderCamara()">✅ Encender Cámara</button>
-    <button id="btnApagar" onclick="apagarCamara()">❌ Apagar Cámara</button>
-
+    <button id="btnGrabar" onclick="iniciar()">🔴 Empezar a grabar</button>
+    <div class="grabando" id="avisoGrabando">🔴 GRABANDO...</div>
     <video id="vistaCamara" autoplay playsinline muted></video>
+    <button id="btnDetener" onclick="detener()">⏹️ Terminar</button>
+    <video id="videoGrabado" controls></video>
+    <a id="btnGuardar" download="mi_video.webm">💾 Guardar video</a>
 
     <script>
-        let flujoCamara = null;
+        let flujo = null;
+        let grabador = null;
+        let datos = [];
 
-        async function encenderCamara() {
+        async function iniciar() {
             try {
-                flujoCamara = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "user", width: 1280, height: 720 },
-                    audio: false
+                flujo = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user", width: 640, height: 480 },
+                    audio: true
                 });
-                const camara = document.getElementById('vistaCamara');
-                camara.srcObject = flujoCamara;
-                camara.style.display = 'block';
-                document.getElementById('btnEncender').style.display = 'none';
-                document.getElementById('btnApagar').style.display = 'inline-block';
-            } catch (error) {
-                alert("No se pudo activar la cámara. Revisa los permisos.");
+
+                const cam = document.getElementById('vistaCamara');
+                cam.srcObject = flujo;
+                cam.style.display = 'block';
+
+                datos = [];
+                grabador = new MediaRecorder(flujo);
+                grabador.ondataavailable = e => { if(e.data.size) datos.push(e.data); };
+                grabador.onstop = mostrar;
+                grabador.start(100);
+
+                document.getElementById('btnGrabar').style.display = 'none';
+                document.getElementById('btnDetener').style.display = 'inline-block';
+                document.getElementById('avisoGrabando').style.display = 'block';
+
+            } catch {
+                alert("❌ Da permiso a CÁMARA y MICRÓFONO");
             }
         }
 
-        function apagarCamara() {
-            if (flujoCamara) {
-                flujoCamara.getTracks().forEach(pista => pista.stop());
-            }
+        function detener() {
+            if (grabador && grabador.state !== 'inactive') grabador.stop();
+            if (flujo) flujo.getTracks().forEach(t => t.stop());
+
             document.getElementById('vistaCamara').style.display = 'none';
-            document.getElementById('btnApagar').style.display = 'none';
-            document.getElementById('btnEncender').style.display = 'inline-block';
+            document.getElementById('avisoGrabando').style.display = 'none';
+            document.getElementById('btnDetener').style.display = 'none';
+        }
+
+        function mostrar() {
+            const blob = new Blob(datos, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            document.getElementById('videoGrabado').src = url;
+            document.getElementById('videoGrabado').style.display = 'block';
+            document.getElementById('btnGuardar').href = url;
+            document.getElementById('btnGuardar').style.display = 'inline-block';
         }
     </script>
 
