@@ -3,29 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grabar Video con Cámara</title>
+    <title>Grabar Video - Pausar y Guardar</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
         body { max-width: 900px; margin: 30px auto; padding: 20px; text-align: center; background: #ffffff; }
         h1 { font-size: 2em; margin-bottom: 25px; color: #1f2937; }
-        button { padding: 16px 30px; font-size: 1.4em; font-weight: bold; border: none; border-radius: 10px; color: white; cursor: pointer; margin: 8px; width: 90%; max-width: 420px; }
+        button { padding: 14px 24px; font-size: 1.2em; font-weight: bold; border: none; border-radius: 10px; color: white; cursor: pointer; margin: 6px; min-width: 180px; }
         #btnGrabar { background: #ef4444; }
+        #btnPausar { background: #f59e0b; display: none; }
         #btnParar { background: #6b7280; display: none; }
-        #btnGuardar { background: #2563eb; display: none; text-decoration: none; }
+        #btnGuardar { background: #2563eb; display: none; text-decoration: none; display: inline-block; line-height: 1.5; }
         #vistaCamara, #videoFinal { max-width: 100%; border-radius: 10px; margin: 20px auto; display: none; box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
-        .aviso { color: #ef4444; font-weight: bold; font-size: 1.3em; margin: 10px 0; display: none; }
+        .aviso { color: #ef4444; font-weight: bold; font-size: 1.2em; margin: 10px 0; display: none; }
     </style>
 </head>
 <body>
 
     <h1>📷 Grabar Video</h1>
 
-    <button id="btnGrabar" onclick="iniciarGrabacion()">🔴 EMPEZAR GRABACIÓN</button>
-    <div class="aviso" id="textoGrabando">🔴 GRABANDO...</div>
+    <button id="btnGrabar" onclick="iniciarGrabacion()">🔴 EMPEZAR</button>
+    <div class="aviso" id="textoEstado">🔴 GRABANDO...</div>
     <video id="vistaCamara" autoplay playsinline muted></video>
+
+    <button id="btnPausar" onclick="alternarPausa()">⏸️ PAUSAR</button>
     <button id="btnParar" onclick="detenerGrabacion()">⏹️ TERMINAR</button>
+
     <video id="videoFinal" controls></video>
-    <a id="btnGuardar" download="mi_video_grabado.webm">💾 DESCARGAR VIDEO</a>
+    <a id="btnGuardar" download="mi_video.webm">💾 GUARDAR / DESCARGAR</a>
 
     <script>
         let flujo = null;
@@ -49,11 +53,30 @@
                 grabador.start(100);
 
                 document.getElementById('btnGrabar').style.display = 'none';
+                document.getElementById('btnPausar').style.display = 'inline-block';
                 document.getElementById('btnParar').style.display = 'inline-block';
-                document.getElementById('textoGrabando').style.display = 'block';
+                document.getElementById('textoEstado').style.display = 'block';
+                document.getElementById('textoEstado').textContent = '🔴 GRABANDO...';
+                document.getElementById('btnGuardar').style.display = 'none';
 
             } catch {
                 alert("⚠️ Debes dar permiso a CÁMARA y MICRÓFONO");
+            }
+        }
+
+        function alternarPausa() {
+            if (!grabador) return;
+            const btn = document.getElementById('btnPausar');
+            const texto = document.getElementById('textoEstado');
+
+            if (grabador.state === 'recording') {
+                grabador.pause();
+                btn.textContent = '▶️ REANUDAR';
+                texto.textContent = '⏸️ EN PAUSA...';
+            } else if (grabador.state === 'paused') {
+                grabador.resume();
+                btn.textContent = '⏸️ PAUSAR';
+                texto.textContent = '🔴 GRABANDO...';
             }
         }
 
@@ -62,7 +85,8 @@
             if (flujo) flujo.getTracks().forEach(t => t.stop());
 
             document.getElementById('vistaCamara').style.display = 'none';
-            document.getElementById('textoGrabando').style.display = 'none';
+            document.getElementById('textoEstado').style.display = 'none';
+            document.getElementById('btnPausar').style.display = 'none';
             document.getElementById('btnParar').style.display = 'none';
         }
 
