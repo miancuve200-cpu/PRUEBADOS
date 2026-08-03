@@ -3,79 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grabar Video</title>
+    <title>Grabar Video con Cámara</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { max-width: 900px; margin: 30px auto; padding: 20px; text-align: center; background: #fff; }
-        h1 { font-size: 2em; margin-bottom: 25px; color: #222; }
-        button { padding: 16px 30px; font-size: 1.4em; font-weight: bold; border: none; border-radius: 10px; color: white; cursor: pointer; margin: 8px; width: 90%; max-width: 400px; }
-        #btnIniciar { background: #ef4444; }
-        #btnDetener { background: #6b7280; display: none; }
-        #btnGuardar { background: #2563eb; display: none; text-decoration: none; display: inline-block; }
-        #camara, #resultado { max-width: 100%; border-radius: 10px; margin: 20px auto; display: none; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        body { max-width: 900px; margin: 30px auto; padding: 20px; text-align: center; background: #ffffff; }
+        h1 { font-size: 2em; margin-bottom: 25px; color: #1f2937; }
+        button { padding: 16px 30px; font-size: 1.4em; font-weight: bold; border: none; border-radius: 10px; color: white; cursor: pointer; margin: 8px; width: 90%; max-width: 420px; }
+        #btnGrabar { background: #ef4444; }
+        #btnParar { background: #6b7280; display: none; }
+        #btnGuardar { background: #2563eb; display: none; text-decoration: none; }
+        #vistaCamara, #videoFinal { max-width: 100%; border-radius: 10px; margin: 20px auto; display: none; box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
         .aviso { color: #ef4444; font-weight: bold; font-size: 1.3em; margin: 10px 0; display: none; }
     </style>
 </head>
 <body>
 
-    <h1>🎥 Graba tu video</h1>
+    <h1>📷 Grabar Video</h1>
 
-    <button id="btnIniciar" onclick="empezar()">🔴 EMPEZAR A GRABAR</button>
-    <div class="aviso" id="textoGrabando">🔴 YA ESTÁS GRABANDO...</div>
-    <video id="camara" autoplay playsinline muted></video>
-    <button id="btnDetener" onclick="parar()">⏹️ TERMINAR</button>
-    <video id="resultado" controls></video>
-    <a id="btnGuardar" download="mi_video.mp4">💾 GUARDAR VIDEO</a>
+    <button id="btnGrabar" onclick="iniciarGrabacion()">🔴 EMPEZAR GRABACIÓN</button>
+    <div class="aviso" id="textoGrabando">🔴 GRABANDO...</div>
+    <video id="vistaCamara" autoplay playsinline muted></video>
+    <button id="btnParar" onclick="detenerGrabacion()">⏹️ TERMINAR</button>
+    <video id="videoFinal" controls></video>
+    <a id="btnGuardar" download="mi_video_grabado.webm">💾 DESCARGAR VIDEO</a>
 
     <script>
-        let flujoVideo = null;
-        let grabadorVideo = null;
-        let partesVideo = [];
+        let flujo = null;
+        let grabador = null;
+        let datosVideo = [];
 
-        async function empezar() {
+        async function iniciarGrabacion() {
             try {
-                // Pedir cámara y micrófono obligatorios
-                flujoVideo = await navigator.mediaDevices.getUserMedia({
+                flujo = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: "user", width: 640, height: 480 },
                     audio: true
                 });
 
-                // Mostrar imagen en vivo
-                document.getElementById('camara').srcObject = flujoVideo;
-                document.getElementById('camara').style.display = 'block';
+                document.getElementById('vistaCamara').srcObject = flujo;
+                document.getElementById('vistaCamara').style.display = 'block';
 
-                // Preparar grabación segura
-                partesVideo = [];
-                grabadorVideo = new MediaRecorder(flujoVideo);
-                grabadorVideo.ondataavailable = e => { if (e.data.size > 0) partesVideo.push(e.data); };
-                grabadorVideo.onstop = mostrarGuardar;
-                grabadorVideo.start(100);
+                datosVideo = [];
+                grabador = new MediaRecorder(flujo);
+                grabador.ondataavailable = e => { if (e.data.size > 0) datosVideo.push(e.data); };
+                grabador.onstop = mostrarVideo;
+                grabador.start(100);
 
-                // Cambiar botones
-                document.getElementById('btnIniciar').style.display = 'none';
-                document.getElementById('btnDetener').style.display = 'inline-block';
+                document.getElementById('btnGrabar').style.display = 'none';
+                document.getElementById('btnParar').style.display = 'inline-block';
                 document.getElementById('textoGrabando').style.display = 'block';
 
             } catch {
-                alert("❌ DEBES DAR PERMISO A CÁMARA Y MICRÓFONO");
+                alert("⚠️ Debes dar permiso a CÁMARA y MICRÓFONO");
             }
         }
 
-        function parar() {
-            if (grabadorVideo && grabadorVideo.state !== 'inactive') grabadorVideo.stop();
-            if (flujoVideo) flujoVideo.getTracks().forEach(p => p.stop());
+        function detenerGrabacion() {
+            if (grabador && grabador.state !== 'inactive') grabador.stop();
+            if (flujo) flujo.getTracks().forEach(t => t.stop());
 
-            document.getElementById('camara').style.display = 'none';
+            document.getElementById('vistaCamara').style.display = 'none';
             document.getElementById('textoGrabando').style.display = 'none';
-            document.getElementById('btnDetener').style.display = 'none';
+            document.getElementById('btnParar').style.display = 'none';
         }
 
-        function mostrarGuardar() {
-            const archivo = new Blob(partesVideo, { type: 'video/webm' });
-            const enlace = URL.createObjectURL(archivo);
-            document.getElementById('resultado').src = enlace;
-            document.getElementById('resultado').style.display = 'block';
-            document.getElementById('btnGuardar').href = enlace;
+        function mostrarVideo() {
+            const archivo = new Blob(datosVideo, { type: 'video/webm' });
+            const url = URL.createObjectURL(archivo);
+            document.getElementById('videoFinal').src = url;
+            document.getElementById('videoFinal').style.display = 'block';
+            document.getElementById('btnGuardar').href = url;
             document.getElementById('btnGuardar').style.display = 'inline-block';
         }
     </script>
